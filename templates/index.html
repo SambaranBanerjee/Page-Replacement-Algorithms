@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Fault Replacement Visualizer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-memory"></i> Page Fault Algorithm Visualizer</h1>
+            <p class="subtitle">Visualize and Compare Page Replacement Algorithms</p>
+        </header>
+
+        <div class="main-content">
+            <div class="input-section">
+                <form id="algorithmForm">
+                    <div class="form-group">
+                        <label for="frames"><i class="fas fa-layer-group"></i> Number of Frames</label>
+                        <input type="number" id="frames" min="1" max="10" value="3" placeholder="e.g., 3" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="referenceString"><i class="fas fa-list-ol"></i> Reference String</label>
+                        <div class="input-with-button">
+                            <input type="text" id="referenceString" placeholder="e.g., 7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1" required>
+                            <button type="button" id="randomBtn" class="btn">
+                                <i class="fas fa-random"></i> Random
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-cogs"></i> Select Algorithms</label>
+                        <div class="algorithms-section">
+                            <div class="algorithm-option" data-algo="fifo">
+                                <i class="fas fa-stream"></i>
+                                <div>FIFO</div>
+                            </div>
+                            <div class="algorithm-option" data-algo="lru">
+                                <i class="fas fa-history"></i>
+                                <div>LRU</div>
+                            </div>
+                            <div class="algorithm-option selected" data-algo="optimal">
+                                <i class="fas fa-bullseye"></i>
+                                <div>Optimal</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="speed"><i class="fas fa-tachometer-alt"></i> Visualization Speed</label>
+                        <select id="speed">
+                            <option value="fast">Fast</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="slow">Slow</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-full">
+                        <i class="fas fa-play"></i> Run Visualization
+                    </button>
+                </form>
+
+                <div class="sample-inputs">
+                    <p><strong>Sample Inputs:</strong></p>
+                    <button type="button" class="sample-btn" data-input="7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1" data-frames="3">Sample 1</button>
+                    <button type="button" class="sample-btn" data-input="1 2 3 4 1 2 5 1 2 3 4 5" data-frames="3">Sample 2</button>
+                    <button type="button" class="sample-btn" data-input="4 7 2 0 1 3 4 7 2 0 1 3" data-frames="3">Sample 3</button>
+                </div>
+            </div>
+
+            <div class="visualization-section">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Running algorithms and generating visualization...</p>
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+
+                <div id="screen">
+                    <div id="welcomeMessage">
+                        <h2><i class="fas fa-info-circle"></i> Welcome to Page Fault Visualizer</h2>
+                        <p>Enter the number of frames and a reference string, then select algorithms to visualize.</p>
+                        <p>The system will show:</p>
+                        <ul>
+                            <li>Step-by-step page table visualization</li>
+                            <li>Page fault occurrences</li>
+                            <li>Algorithm comparison charts</li>
+                            <li>Performance statistics</li>
+                        </ul>
+                        <p>Try the sample inputs to get started quickly!</p>
+                    </div>
+                </div>
+
+                <div class="step-navigation" id="stepNavigation" style="display: none;">
+                    <button class="step-btn" id="prevStep" disabled><i class="fas fa-chevron-left"></i> Previous</button>
+                    <div class="current-step">
+                        Step: <span id="currentStep">1</span> / <span id="totalSteps">1</span>
+                    </div>
+                    <button class="step-btn" id="nextStep"><i class="fas fa-chevron-right"></i> Next</button>
+                    <button class="step-btn" id="playPause"><i class="fas fa-play"></i> Play</button>
+                </div>
+
+                <!-- Add this inside your visualization-section -->
+                <div class="graph-section">
+                    <h3><i class="fas fa-chart-bar"></i> Algorithm Comparison Graph</h3>
+                    <div id="screen-1" class="graph-container">
+                        <div id="graph-placeholder">
+                            <p>Run algorithms to see comparison graph</p>
+                        </div>
+                        <img id="comparison-graph" style="display: none; max-width: 100%; border-radius: 10px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Operating System Project - Page Fault Algorithm Visualization</p>
+            <p>FIFO • LRU • Optimal Page Replacement Algorithms</p>
+        </div>
+    </div>
+
+    <script src="/static/js/index.js"></script>
+</body>
+</html>
