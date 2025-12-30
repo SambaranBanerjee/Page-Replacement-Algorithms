@@ -1,5 +1,5 @@
 // Configuration
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = '';
 let currentResults = null;
 let currentStep = 0;
 let isPlaying = false;
