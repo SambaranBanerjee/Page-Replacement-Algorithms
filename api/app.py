@@ -5,19 +5,29 @@ import os
 import io
 import base64
 
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
+import matplotlib.pyplot as plt
+
 # Add algorithms directory to path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'algorithms'))
+current_dir = os.path.dirname(os.path.abspath(__file__)) # .../api
+project_root = os.path.dirname(current_dir)            # .../ (Root)
+
+# Add algorithms folder to system path
+sys.path.append(project_root)
 
 try:
-    # We will use the internal simulation for consistency with the frontend table
     from algorithms.plot import graphPlot
-    import matplotlib
-    matplotlib.use('Agg')  # Use non-interactive backend
-    import matplotlib.pyplot as plt
 except ImportError as e:
-    print(f"Import Error: {e}")
+    print(f"⚠️ Warning: Could not import graphPlot. Graphing will fail. Error: {e}")
+    # Define a dummy function so the app doesn't crash immediately
+    def graphPlot(*args, **kwargs):
+        print("GraphPlot not available")
 
-app = Flask(__name__)
+template_dir = os.path.join(project_root, 'templates')
+static_dir = os.path.join(project_root, 'static')
+
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 CORS(app)
 
 @app.route("/")
